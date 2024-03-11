@@ -6,22 +6,27 @@
  * Version: 1.0.0
  * Author: Serhii Odokiienko
  * Author URI: http://example.com
- * WC requires at least: 3.0
- * WC tested up to: 5.5
  * Text Domain: woocommerce-dynamic-discount
  */
 
-if ( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
-$class_file_path = plugin_dir_path( __FILE__ ) . 'includes/class-wc-dynamic-discount.php';
-if ( ! class_exists( 'WC_Dynamic_Discount' ) && file_exists( $class_file_path ) ) {
-	include_once $class_file_path;
-}
+$class_file_path = plugin_dir_path(__FILE__) . 'includes/class-wdd-wc-dynamic-discount.php';
 
-function run_wc_dynamic_discount() {
-	$plugin = new WC_Dynamic_Discount();
-	$plugin->run();
+if (file_exists($class_file_path)) {
+	include_once $class_file_path;
+	
+	if (class_exists('WDD_WC_Dynamic_Discount')) {
+		function wdd_run_wc_dynamic_discount() {
+			$plugin = new WDD_WC_Dynamic_Discount();
+			$plugin->run();
+		}
+		wdd_run_wc_dynamic_discount();
+	} else {
+		error_log('WDD_WC_Dynamic_Discount class does not exist after including the file.');
+	}
+} else {
+	error_log('WDD_WC_Dynamic_Discount file does not exist: ' . $class_file_path);
 }
-run_wc_dynamic_discount();
